@@ -41,8 +41,10 @@ int main(void)
         {
             TonLED4 += 1;
         }
-        
-        // PWM LED4 brightness
+
+            PWMperiod = 128;
+
+        /* PWM LED4 brightness
         PWMperiod = 255;
         while(PWMperiod != 0)
         {
@@ -53,8 +55,46 @@ int main(void)
             PWMperiod --;
             __delay_us(20);
         }
-        LED4 = 0;
+        LED4 = 0; */
         
+         // PWM LED4 brightness
+        for(unsigned char PWMperiod = 255; PWMperiod != 0; PWMperiod --)
+        {
+            if(TonLED4 == PWMperiod)
+            {
+                LED4 = 1;
+            }
+            __delay_us(20);
+        }
+        LED4 = 0;
+
+ /* if(PWMperiod == 128)
+        {
+            LED5 = 1;
+        }
+        else
+        {
+            LED5 = 0;
+        }*/
+
+ // Change pitch
+        if(SW4 == 0)
+        {
+            period -= 1;
+        }
+        
+        if(SW5 == 0)
+        {
+            period += 1;
+        }
+        
+        // Make a tone
+        for(unsigned char cycles = 50; cycles != 0; cycles--)
+        {
+            BEEPER = !BEEPER;
+            for(unsigned int p = period; p != 0; p--);
+        }
+
         // Activate bootloader if SW1 is pressed.
         if(SW1 == 0)
         {
@@ -68,19 +108,23 @@ int main(void)
  * 1. The main part of the program contains the 'while(1)' loop. What condition
  *    is being evaluated within its brackets? (Hint: Think about the Boolean
  *    variables from Activity 2-Variables.) How many times will this loop run?
- * 
+this is running if SW2 or SW3 are pressed and only once.
+
  * 2. There is a second 'while(PWMperiod != 0)' loop inside the first while
  *    loop. What condition is being evaluated inside this while statement's
  *    brackets? How many times will the contents of this inner loop run?
- * 
+it is only running when PWMperiod is 0, and it will run however many times it needs to.
+
  * 3. What condition is being evaluated by the if statement inside the loop?
  *    What happens when the if condition is true?
- * 
+if the period and the brightness match then LED4 will be on
  * 4. Pressing the up or down buttons (SW3 and SW2) will increase or decrease
  *    the brightness of LED D4 using PWM (Pulse-Width Modulation). How many 
  *    different brightnesses can the LED have? What would the step size of one
  *    brightness level change be if it was expressed as a percentage?
- * 
+if we counted every new press it would be less than 1% but since we are not counting every new press 
+but instead we are counting thousands of times per milisecond each "press" is probably 15%-30%
+
  * 5. The while loop needs three statements to perform its function. First, the
  *    assignment statement 'PWMperiod = 255;' sets the PWMperiod variable. Next,
  *    the condition 'while(PWMperiod != 0)' runs the contents of the loop code
@@ -91,7 +135,7 @@ int main(void)
  *    statement 'PWMperiod --;' modifies the variable from within the loop.
  *    When the condition is false, the loop terminates and the program continues
  *    running the code below the loop structure.
- * 
+
  *    A 'for' loop is an alternative to a while loop, and incorporates the
  *    assignment of the loop variable, the loop conditional check, and variable
  *    modification into a single statement as shown in the example code. Replace
@@ -109,7 +153,8 @@ int main(void)
         LED4 = 0;
         
  *    What is an advantage of using a for loop instead of a while loop?
- * 
+uses less lines for the same code, it is condensed and easier to find.
+
  * 6. The 'for' loop, above, redefines the PWMperiod variable in the 
  *    initialization statement: 'for(unsigned char PWMperiod = 255; ...'
  * 
@@ -137,10 +182,14 @@ int main(void)
  *    Compile and run the code. When the program runs, the PWMperiod variable
  *    inside the for loop will count down from 255 to 0, and should be 0 when
  *    the loop finishes. Is LED D5 lit? What must the value of PWMperiod be?
- * 
+
+yes the LED is still lit, therefore the value of PWMperiod must be atleast 1
+
  *    Can you remove the global PWMperiod variable definition from the top of 
  *    the program now that PWMperiod is being defined in the for loop?
- * 
+
+yes you would be able to as it doesn't matter for outside the for and is defined inside the from
+
  * 7. Add this code below the PWM loop to generate a tone:
                 
         // Change pitch
@@ -168,9 +217,9 @@ int main(void)
  *    time delay to our program. The higher the number of loops, the more
  *    instruction cycles it will take to decrement the loop counter variable
  *    to zero, increasing the time delay until the next cycle.
- * 
+
  *    What variable type is period? How large a number can this variable hold?
- * 
+ * it is an unsinged integer
  * 8. Why is period copied to the local variable p inside the inner for loop?
  *    What would happen if the actual period variable was decremented instead?
  * 
