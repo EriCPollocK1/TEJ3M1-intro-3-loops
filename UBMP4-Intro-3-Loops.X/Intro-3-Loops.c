@@ -19,7 +19,8 @@
 // TODO Set linker code offset to '800' under "Additional options" pull-down.
 
 // Program variable definitions
-unsigned char TonLED4 = 127;    // LED brightness PWM value
+unsigned char TonLED4 = 50;    // LED brightness PWM value
+unsigned char TonLED5 = 50;
 unsigned char PWMperiod;        // PWM period counter for PWM loops
 unsigned int period = 460;      // Sound period value for later activities
 
@@ -30,54 +31,56 @@ int main(void)
 	
     while(1)
 	{
-        // Decrease brightness
-        if(SW2 == 0)
+       
+       
+         // Decrease brightness
+        if(SW2 == 0 && TonLED4 >= 1 ) 
         {
-            TonLED4 -= 1;
+            TonLED4 --;
         }
 
         // Increase brightness
-        if(SW3 == 0)
+        if(SW3 == 0 && TonLED4 <= 49)
         {
-            TonLED4 += 1;
+            TonLED4 ++;
         }
 
-            PWMperiod = 128;
+            PWMperiod = 100;
 
-        /* PWM LED4 brightness
-        PWMperiod = 255;
-        while(PWMperiod != 0)
+              if(SW5 == 0 && TonLED5 >= 1 ) 
+        {
+            TonLED5 --;
+        }
+        if(SW4 ==0 && TonLED5 <= 49)
+        {
+            TonLED5 ++;
+        }
+        PWMperiod = 100;
+        LED3 = 1;
+        LED6 = 1;
+
+         
+
+        
+         // PWM LED4 brightness
+        for(unsigned char PWMperiod = 100; PWMperiod != 0; PWMperiod --)
         {
             if(TonLED4 == PWMperiod)
             {
                 LED4 = 1;
             }
-            PWMperiod --;
             __delay_us(20);
-        }
-        LED4 = 0; */
-        
-         // PWM LED4 brightness
-        for(unsigned char PWMperiod = 255; PWMperiod != 0; PWMperiod --)
-        {
-            if(TonLED4 == PWMperiod)
+            if(TonLED5 == PWMperiod)
             {
-                LED4 = 1;
+                LED5 = 1;
             }
             __delay_us(20);
         }
         LED4 = 0;
+        LED5 = 0;
 
- /* if(PWMperiod == 128)
-        {
-            LED5 = 1;
-        }
-        else
-        {
-            LED5 = 0;
-        }*/
 
- // Change pitch
+ /* Change pitch
         if(SW4 == 0)
         {
             period -= 1;
@@ -93,7 +96,7 @@ int main(void)
         {
             BEEPER = !BEEPER;
             for(unsigned int p = period; p != 0; p--);
-        }
+        }  */
 
         // Activate bootloader if SW1 is pressed.
         if(SW1 == 0)
@@ -153,6 +156,7 @@ but instead we are counting thousands of times per milisecond each "press" is pr
         LED4 = 0;
         
  *    What is an advantage of using a for loop instead of a while loop?
+
 uses less lines for the same code, it is condensed and easier to find.
 
  * 6. The 'for' loop, above, redefines the PWMperiod variable in the 
@@ -219,10 +223,15 @@ yes you would be able to as it doesn't matter for outside the for and is defined
  *    to zero, increasing the time delay until the next cycle.
 
  *    What variable type is period? How large a number can this variable hold?
- * it is an unsinged integer
+
+it is an unsinged integer
+
  * 8. Why is period copied to the local variable p inside the inner for loop?
  *    What would happen if the actual period variable was decremented instead?
- * 
+
+this is so that it will use the full period and not the one that has been changed in the code before
+it uses the period from the Variables
+
  * Programming Activities
  * 
  * 1. Pressing and holding SW2 or SW3 causes the brightness of LED D4 to cycle
@@ -231,6 +240,19 @@ yes you would be able to as it doesn't matter for outside the for and is defined
  *    pressing and holding SW3 will brighten the LED and keep it at maximum
  *    brightness.
  * 
+   if(SW2 == 0 && TonLED4 >= 1 ) 
+        {
+            TonLED4 -= 1;
+        }
+
+        // Increase brightness
+        if(SW3 == 0 && TonLED4 <= 126)
+        {
+            TonLED4 += 1;
+        }
+
+            PWMperiod = 128;
+
  * 2. Modify your program to control the brightness of LED D5 using SW4 and SW5
  *    while using SW3 and SW2 to control LED D4. Hint: To ensure each LED can
  *    reach maximum brightness (100% PWM on-time), you'll have to perform both
