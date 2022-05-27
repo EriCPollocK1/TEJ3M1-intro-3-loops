@@ -19,8 +19,8 @@
 // TODO Set linker code offset to '800' under "Additional options" pull-down.
 
 // Program variable definitions
-unsigned char TonLED4 = 50;    // LED brightness PWM value
-unsigned char TonLED5 = 50;
+unsigned char TonLED4 = 0;    // LED brightness PWM value
+unsigned char TonLED5 = 0;
 unsigned char PWMperiod;        // PWM period counter for PWM loops
 unsigned int period = 460;      // Sound period value for later activities
 
@@ -33,43 +33,36 @@ int main(void)
 	{
        
        
-         // Decrease brightness
-        if(SW2 == 0 && TonLED4 >= 1 ) 
+    // Decrease brightness
+        if(SW2 == 0 && TonLED4 > 0 ) 
         {
             TonLED4 --;
         }
 
         // Increase brightness
-        if(SW3 == 0 && TonLED4 <= 49)
+        if(SW3 == 0 && TonLED4 < 500)
         {
             TonLED4 ++;
         }
 
-            PWMperiod = 100;
-
-              if(SW5 == 0 && TonLED5 >= 1 ) 
+        if(SW5 == 0 && TonLED5 > 0 ) 
         {
             TonLED5 --;
         }
-        if(SW4 ==0 && TonLED5 <= 49)
+        if(SW4 ==0 && TonLED5 < 500)
         {
             TonLED5 ++;
         }
-        PWMperiod = 100;
-        LED3 = 1;
-        LED6 = 1;
-
-         
-
+LED3 = 1;
+LED6 = 1;
         
          // PWM LED4 brightness
-        for(unsigned char PWMperiod = 100; PWMperiod != 0; PWMperiod --)
+        for(unsigned char PWMperiod = 500; PWMperiod != 0; PWMperiod --)
         {
             if(TonLED4 == PWMperiod)
             {
                 LED4 = 1;
             }
-            __delay_us(20);
             if(TonLED5 == PWMperiod)
             {
                 LED5 = 1;
@@ -77,8 +70,7 @@ int main(void)
             __delay_us(20);
         }
         LED4 = 0;
-        LED5 = 0;
-
+        LED5 = 0; 
 
  /* Change pitch
         if(SW4 == 0)
