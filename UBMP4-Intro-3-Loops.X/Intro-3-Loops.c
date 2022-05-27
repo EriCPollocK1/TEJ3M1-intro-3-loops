@@ -21,7 +21,7 @@
 // Program variable definitions
 unsigned char TonLED4 = 0;    // LED brightness PWM value
 unsigned char TonLED5 = 0;
-unsigned char PWMperiod;        // PWM period counter for PWM loops
+unsigned char PWMperiod = 255;        // PWM period counter for PWM loops
 unsigned int period = 460;      // Sound period value for later activities
 
 int main(void)
@@ -31,46 +31,24 @@ int main(void)
 	
     while(1)
 	{
-       
-       
-    // Decrease brightness
-        if(SW2 == 0 && TonLED4 > 0 ) 
-        {
-            TonLED4 --;
-        }
-
-        // Increase brightness
-        if(SW3 == 0 && TonLED4 < 500)
-        {
-            TonLED4 ++;
-        }
-
-        if(SW5 == 0 && TonLED5 > 0 ) 
-        {
-            TonLED5 --;
-        }
-        if(SW4 ==0 && TonLED5 < 500)
-        {
-            TonLED5 ++;
-        }
-LED3 = 1;
-LED6 = 1;
-        
-         // PWM LED4 brightness
-        for(unsigned char PWMperiod = 500; PWMperiod != 0; PWMperiod --)
+       if(SW2 == 0)
+       {
+           if(TonLED4 != PWMperiod)
+           {
+               TonLED4 ++;
+           }
+           __delay_us(20);
+           
+           // PWM LED4 brightness
+        for(unsigned char PWMperiod = 255; PWMperiod != 0; PWMperiod --)
         {
             if(TonLED4 == PWMperiod)
             {
                 LED4 = 1;
             }
-            if(TonLED5 == PWMperiod)
-            {
-                LED5 = 1;
-            }
             __delay_us(20);
         }
-        LED4 = 0;
-        LED5 = 0; 
+       }
 
  /* Change pitch
         if(SW4 == 0)
@@ -251,7 +229,7 @@ it uses the period from the Variables
  *    PWM functions in the same loop. You can see the resulting PWM wave if you
  *    have access to an oscilloscope. If not, just light the other two LEDs and 
  *    compare the brightness of LEDs D4 and D5 to them.
- * 
+
  * 3. Rather than having lights suddenly turn on at full brightness, or motors
  *    turn on at full power, create a program that uses a for loop and your PWM
  *    code to make a 'soft-start' program that slowly increases the PWM on-time
