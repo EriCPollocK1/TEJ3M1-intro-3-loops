@@ -19,8 +19,8 @@
 // TODO Set linker code offset to '800' under "Additional options" pull-down.
 
 // Program variable definitions
-unsigned char TonLED4 = 0;    // LED brightness PWM value
-unsigned char TonLED5 = 0;
+unsigned char TonLED4 = 127;    // LED brightness PWM value
+unsigned char TonLED5 = 127;
 unsigned char PWMperiod = 255;        // PWM period counter for PWM loops
 unsigned int period = 460;      // Sound period value for later activities
 
@@ -30,24 +30,52 @@ int main(void)
     UBMP4_config();             // Configure on-board UBMP4 I/O devices
 	
     while(1)
-	{
-       if(SW2 == 0)
-       {
-           if(TonLED4 != PWMperiod)
-           {
-               TonLED4 ++;
-           }
-           __delay_us(20);
-           
-           // PWM LED4 brightness
-        for(unsigned char PWMperiod = 255; PWMperiod != 0; PWMperiod --)
+{
+    if(SW2 == 0 && TonLED4 > 0)
+    {
+        TonLED4 --;
+    }
+    if(SW3 == 0 && TonLED4 < 255)
+    {
+        TonLED4 ++;
+    }
+    LED4 = 0;
+
+        if(SW4 == 0)
         {
-            if(TonLED4 == PWMperiod)
-            {
-                LED4 = 1;
-            }
-            __delay_us(20);
+       while(TonLED4 < 255)
+       {
+           TonLED4 ++;
+       
+       PWMperiod = 255;
+       while(PWMperiod != 0)
+       {
+           if(TonLED4 == PWMperiod)
+           {
+               LED4 = 1;
+           }
+           PWMperiod --;
+           __delay_ms(20);
+       }
+       }
+       while(PWMperiod == 255)
+       {
+           TonLED4 --;
+           PWMperiod = 255;
+
+           while(PWmperiod != 0)
+           {
+               if(TonLED4 == PWMperiod)
+               {
+                   LED4 = 1;
+               }
+               PWMperiod --;
+               __delay_ms(20);
+           }
+       }
         }
+       LED4 = 0;
+        
        }
 
  /* Change pitch
@@ -73,8 +101,7 @@ int main(void)
         {
             RESET();
         }
-    }
-}
+        }
 
 /* Program Analysis
  * 
@@ -234,10 +261,40 @@ it uses the period from the Variables
  *    turn on at full power, create a program that uses a for loop and your PWM
  *    code to make a 'soft-start' program that slowly increases the PWM on-time
  *    when you press a button. Can you make it turn off in a similar way?
- * 
+  if(SW2 == 0 && TonLED4 > 0)
+    {
+        TonLED4 --;
+    }
+    if(SW3 == 0 && TonLED4 < 255)
+    {
+        TonLED4 ++;
+    }
+    LED4 = 0;
+
+        if(SW4 == 0)
+        {
+       while(TonLED4 < 255)
+       {
+           TonLED4 ++;
+       
+       PWMperiod = 255;
+       while(PWMperiod != 0)
+       {
+           if(TonLED4 == PWMperiod)
+           {
+               LED4 = 1;
+           }
+           PWMperiod --;
+           __delay_ms(20);
+       }
+       }
+        }
+       LED4 = 0;
+        
+       }
  * 4. Make a program that creates an automated, electronic 'pulse', repeatedly
  *    brightening and dimming one or more LEDs.
- * 
+
  * 5. Make a 'chirp' or 'pew-pew' sound effect by sweeping through a range of
  *    frequencies when a button is pressed.
  */
