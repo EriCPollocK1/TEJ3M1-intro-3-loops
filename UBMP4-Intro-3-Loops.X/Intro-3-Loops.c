@@ -19,7 +19,7 @@
 // TODO Set linker code offset to '800' under "Additional options" pull-down.
 
 // Program variable definitions
-unsigned char TonLED4 = 127;    // LED brightness PWM value
+unsigned char TonLED4 = 0;    // LED brightness PWM value
 unsigned char TonLED5 = 127;
 unsigned char PWMperiod = 255;        // PWM period counter for PWM loops
 unsigned int period = 460;      // Sound period value for later activities
@@ -28,55 +28,60 @@ int main(void)
 {
     OSC_config();               // Configure internal oscillator for 48 MHz
     UBMP4_config();             // Configure on-board UBMP4 I/O devices
-	
+	LED4 = 1;
+    __delay_ms(100);
+	LED4 = 0;
+    __delay_ms(100);
+	LED4 = 1;
+    __delay_ms(100);
+
+
     while(1)
-{
-    if(SW2 == 0 && TonLED4 > 0)
     {
-        TonLED4 --;
-    }
-    if(SW3 == 0 && TonLED4 < 255)
-    {
-        TonLED4 ++;
-    }
-    LED4 = 0;
+        if(SW2 == 0 && TonLED4 > 0)
+        {
+            TonLED4 --;
+        }
+        if(SW3 == 0 && TonLED4 < 255)
+        {
+            TonLED4 ++;
+        }
 
         if(SW4 == 0)
         {
-       while(TonLED4 < 255)
-       {
-           TonLED4 ++;
-       
-       PWMperiod = 255;
-       while(PWMperiod != 0)
-       {
-           if(TonLED4 == PWMperiod)
-           {
-               LED4 = 1;
-           }
-           PWMperiod --;
-           __delay_ms(20);
-       }
-       }
-       while(PWMperiod == 255)
-       {
-           TonLED4 --;
-           PWMperiod = 255;
+            while(TonLED4 < 255)
+            {
+                TonLED4 ++;
+                PWMperiod = 255;
 
-           while(PWmperiod != 0)
-           {
-               if(TonLED4 == PWMperiod)
-               {
-                   LED4 = 1;
-               }
-               PWMperiod --;
-               __delay_ms(20);
-           }
-       }
+                while(PWMperiod != 0)
+                {
+                    if(TonLED4 == PWMperiod)
+                    {
+                        LED4 = 1;
+                    }
+                    PWMperiod --;
+                    __delay_us(20);
+                }
+                LED4 = 0;
+            }
         }
-       LED4 = 0;
+
+        PWMperiod = 255;
+
+        while(PWMperiod != 0)
+        {
+            if(TonLED4 == PWMperiod)
+            {
+                LED4 = 1;
+            }
+            PWMperiod --;
+            __delay_us(20);
+        }
+        LED4 = 0;
+    
         
-       }
+
 
  /* Change pitch
         if(SW4 == 0)
@@ -101,7 +106,8 @@ int main(void)
         {
             RESET();
         }
-        }
+    }
+}
 
 /* Program Analysis
  * 
