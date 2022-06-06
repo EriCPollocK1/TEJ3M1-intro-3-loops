@@ -23,17 +23,12 @@ unsigned char TonLED4 = 0;    // LED brightness PWM value
 unsigned char TonLED5 = 127;
 unsigned char PWMperiod = 255;        // PWM period counter for PWM loops
 unsigned int period = 460;      // Sound period value for later activities
+int extra = 0;
 
 int main(void)
 {
     OSC_config();               // Configure internal oscillator for 48 MHz
     UBMP4_config();             // Configure on-board UBMP4 I/O devices
-	LED4 = 1;
-    __delay_ms(100);
-	LED4 = 0;
-    __delay_ms(100);
-	LED4 = 1;
-    __delay_ms(100);
 
 
     while(1)
@@ -49,7 +44,7 @@ int main(void)
 
         if(SW4 == 0)
         {
-            while(TonLED4 < 255)
+            while(TonLED4 < 255 && extra == 0)
             {
                 TonLED4 ++;
                 PWMperiod = 255;
@@ -64,6 +59,30 @@ int main(void)
                     __delay_us(20);
                 }
                 LED4 = 0;
+                if(TonLED4 == 255)
+                {
+                    extra = 1;
+                }
+            }
+             while(TonLED4 > 0 && extra == 1)
+            {
+                TonLED4 --;
+                PWMperiod = 255;
+
+                while(PWMperiod != 0)
+                {
+                    if(TonLED4 == PWMperiod)
+                    {
+                        LED4 = 1;
+                    }
+                    PWMperiod --;
+                    __delay_us(20);
+                }
+                LED4 = 0;
+                if(TonLED4 == 0)
+                {
+                    extra = 0;
+                }
             }
         }
 
@@ -80,7 +99,6 @@ int main(void)
         }
         LED4 = 0;
     
-        
 
 
  /* Change pitch
